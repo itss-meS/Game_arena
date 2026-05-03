@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tips &amp; Tricks – Game Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:          #050508;
+      --bg-alt:      #0d0d1a;
+      --bg-card:     #111827;
+      --neon-green:  #00ff88;
+      --neon-blue:   #06b6d4;
+      --neon-purple: #9333ea;
+      --text:        #f1f5f9;
+      --text-muted:  #94a3b8;
+      --border:      #1e293b;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Rajdhani', sans-serif; font-size: 16px;
+      line-height: 1.6; overflow-x: hidden;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(5,5,8,.92); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0,255,136,.18);
+      padding: 0 6%; display: flex; align-items: center;
+      justify-content: space-between; height: 68px;
+    }
+    .nav-logo {
+      font-family: 'Orbitron', sans-serif; font-size: 1.45rem; font-weight: 900;
+      color: var(--neon-green); text-decoration: none;
+      text-shadow: 0 0 18px rgba(0,255,136,.55); letter-spacing: 2px;
+    }
+    .nav-logo span { color: var(--neon-blue); }
+    .nav-menu { display: flex; list-style: none; gap: 2rem; }
+    .nav-menu a {
+      font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: .95rem;
+      color: var(--text-muted); text-decoration: none; letter-spacing: 1px;
+      text-transform: uppercase; position: relative; padding-bottom: 4px;
+      transition: color .3s;
+    }
+    .nav-menu a::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 2px; background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green); transition: width .3s;
+    }
+    .nav-menu a:hover, .nav-menu a.active { color: var(--neon-green); }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 140px 6% 80px; text-align: center;
+      background:
+        radial-gradient(circle at 25% 50%, rgba(0,255,136,.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 50%, rgba(147,51,234,.08) 0%, transparent 50%),
+        var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 900;
+      background: linear-gradient(135deg, #fff 0%, #00ff88 50%, #9333ea 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: .75rem;
+      filter: drop-shadow(0 0 22px rgba(0,255,136,.4));
+    }
+    .page-hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 560px; margin: 0 auto; }
+
+    /* TIPS SECTION */
+    .tips-section { padding: 80px 6%; }
+
+    /* FEATURED TIP */
+    .featured-tip {
+      background: linear-gradient(135deg, rgba(0,255,136,.06), rgba(6,182,212,.06));
+      border: 1px solid rgba(0,255,136,.25);
+      border-radius: 16px; padding: 2.5rem 3rem;
+      margin-bottom: 4rem; position: relative; overflow: hidden;
+    }
+    .featured-tip::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(to bottom, var(--neon-green), var(--neon-blue));
+    }
+    .featured-label {
+      font-family: 'Orbitron', sans-serif; font-size: .68rem; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--neon-green);
+      margin-bottom: .75rem; display: block;
+    }
+    .featured-tip h2 {
+      font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900;
+      color: var(--text); margin-bottom: 1rem; line-height: 1.3;
+    }
+    .featured-tip p { font-size: 1rem; color: var(--text-muted); line-height: 1.8; max-width: 720px; }
+
+    /* TIPS GRID */
+    .section-label {
+      font-family: 'Orbitron', sans-serif; font-size: .7rem; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--neon-green);
+      margin-bottom: 2rem; display: block;
+    }
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.75rem; margin-bottom: 5rem;
+    }
+    .tip-card {
+      background: var(--bg-card); border-radius: 14px;
+      border: 1px solid var(--border); padding: 2rem;
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      position: relative; overflow: hidden;
+    }
+    .tip-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(to right, var(--neon-green), var(--neon-blue));
+      transition: width .4s;
+    }
+    .tip-card:hover { transform: translateY(-6px); border-color: rgba(0,255,136,.3); }
+    .tip-card:hover::after { width: 100%; }
+    .tip-card:hover { box-shadow: 0 18px 45px rgba(0,0,0,.45), 0 0 24px rgba(0,255,136,.12); }
+
+    .tip-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.2rem;
+    }
+    .icon-green  { background: rgba(0,255,136,.12); border: 1px solid rgba(0,255,136,.2); }
+    .icon-blue   { background: rgba(6,182,212,.12);  border: 1px solid rgba(6,182,212,.2); }
+    .icon-purple { background: rgba(147,51,234,.12); border: 1px solid rgba(147,51,234,.2); }
+    .icon-gold   { background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.2); }
+
+    .tip-tag {
+      font-size: .65rem; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 50px;
+      margin-bottom: .8rem; display: inline-block;
+    }
+    .tag-green  { color: var(--neon-green);  background: rgba(0,255,136,.1);  border: 1px solid rgba(0,255,136,.2); }
+    .tag-blue   { color: var(--neon-blue);   background: rgba(6,182,212,.1);   border: 1px solid rgba(6,182,212,.2); }
+    .tag-purple { color: var(--neon-purple); background: rgba(147,51,234,.1); border: 1px solid rgba(147,51,234,.2); }
+    .tag-gold   { color: #fbbf24;            background: rgba(251,191,36,.1);  border: 1px solid rgba(251,191,36,.2); }
+
+    .tip-title { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: .65rem; line-height: 1.3; }
+    .tip-text  { font-size: .92rem; color: var(--text-muted); line-height: 1.75; }
+
+    /* PRO TIPS TABLE */
+    .pro-tips { margin-bottom: 5rem; }
+    .pro-tips-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    }
+    .pro-tip-item {
+      background: var(--bg-card); border-radius: 10px; padding: 1.4rem 1.6rem;
+      border: 1px solid var(--border); display: flex; gap: 1.2rem; align-items: flex-start;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .pro-tip-item:hover {
+      border-color: rgba(6,182,212,.3);
+      box-shadow: 0 8px 28px rgba(0,0,0,.35), 0 0 16px rgba(6,182,212,.1);
+    }
+    .pro-num {
+      font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900;
+      color: rgba(0,255,136,.25); line-height: 1; flex-shrink: 0; padding-top: .1rem;
+      min-width: 36px;
+    }
+    .pro-tip-item h4 { font-family: 'Orbitron', sans-serif; font-size: .88rem; font-weight: 700; color: var(--text); margin-bottom: .35rem; }
+    .pro-tip-item p  { font-size: .88rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* FOOTER */
+    footer {
+      background: #030305; border-top: 1px solid var(--border);
+      padding: 64px 6% 30px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-brand-logo {
+      font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900;
+      color: var(--neon-green); text-decoration: none;
+      text-shadow: 0 0 14px rgba(0,255,136,.5); letter-spacing: 2px;
+      display: block; margin-bottom: 1rem;
+    }
+    .footer-brand-logo span { color: var(--neon-blue); }
+    .footer-brand p { color: var(--text-muted); font-size: .88rem; line-height: 1.8; }
+    .footer-heading {
+      font-family: 'Orbitron', sans-serif; font-size: .8rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--text); margin-bottom: 1.4rem;
+    }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: .65rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: .88rem; transition: color .3s; }
+    .footer-links a:hover { color: var(--neon-green); }
+    .social-links { display: flex; gap: .65rem; margin-top: 1.1rem; }
+    .social-link {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); text-decoration: none; font-size: 1rem;
+      transition: all .3s;
+    }
+    .social-link:hover {
+      background: rgba(0,255,136,.1); border-color: var(--neon-green);
+      color: var(--neon-green); box-shadow: 0 0 14px rgba(0,255,136,.3);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 1.4rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-bottom p { color: var(--text-muted); font-size: .82rem; }
+    .footer-bottom span { color: var(--neon-green); }
+
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .pro-tips-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-menu { display: none; }
+      .featured-tip { padding: 1.8rem; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">GAME<span>ARENA</span></a>
+    <ul class="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="tips.html" class="active">Tips</a></li>
+      <li><a href="videos.html">Videos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <h1>Tips &amp; Tricks</h1>
+    <p>Master every game with expert strategies, pro-level tactics, and insider knowledge to dominate the competition.</p>
+  </div>
+
+  <!-- TIPS SECTION -->
+  <section class="tips-section">
+
+    <!-- FEATURED TIP -->
+    <div class="featured-tip">
+      <span class="featured-label">⚡ Featured Tip of the Week</span>
+      <h2>Master the Art of Map Awareness</h2>
+      <p>Map awareness is the single most important skill separating good players from great ones. Always keep an eye on the minimap, track enemy positions through audio cues, and anticipate rotations before they happen. In battle royale games, know the safe zone timer and plan your movement with vehicles in mind — reacting late costs you precious health and loot time.</p>
+    </div>
+
+    <!-- GENERAL GAMING TIPS -->
+    <span class="section-label">🎮 General Gaming Tips</span>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <div class="tip-icon icon-green">🎯</div>
+        <span class="tip-tag tag-green">Aim Training</span>
+        <h3 class="tip-title">Warm Up Before Ranked Matches</h3>
+        <p class="tip-text">Spend 10–15 minutes in a practice range or custom lobby before ranked play. Muscle memory needs activation — cold lobbies lead to avoidable early deaths and poor reaction times.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon icon-blue">🎧</div>
+        <span class="tip-tag tag-blue">Audio</span>
+        <h3 class="tip-title">Use Stereo Headphones, Not Speakers</h3>
+        <p class="tip-text">Directional audio is a massive advantage. A quality gaming headset lets you pinpoint enemy footsteps, gunfire direction, and vehicle sounds — information speakers simply cannot convey accurately.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon icon-purple">🧠</div>
+        <span class="tip-tag tag-purple">Mindset</span>
+        <h3 class="tip-title">Review Your Gameplay Footage</h3>
+        <p class="tip-text">Record and watch back your matches. What felt right in the moment often looks obviously wrong on replay. Identify rotations you should have taken, engagements you shouldn't, and positioning mistakes.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon icon-gold">⚡</div>
+        <span class="tip-tag tag-gold">Settings</span>
+        <h3 class="tip-title">Optimize Your Sensitivity Settings</h3>
+        <p class="tip-text">There's no universal best sensitivity. Lower sensitivity gives precision; higher sensitivity helps with fast turns. Start low, increase gradually, and lock your settings for 2 weeks minimum before judging.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon icon-green">🗺️</div>
+        <span class="tip-tag tag-green">Strategy</span>
+        <h3 class="tip-title">Learn One Location Deeply</h3>
+        <p class="tip-text">Instead of roaming every corner of the map, pick 2–3 landing spots and master them. Know every loot spawn, cover position, and rotation path. Consistency beats randomness every time.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon icon-blue">🤝</div>
+        <span class="tip-tag tag-blue">Teamplay</span>
+        <h3 class="tip-title">Communicate Callouts Calmly</h3>
+        <p class="tip-text">Panic calls are noise; clear calls are intelligence. Use compass degrees, building names, or landmark descriptions. "Enemy north, 180m, second floor window" beats "HE'S RIGHT THERE!" every time.</p>
+      </div>
+
+    </div>
+
+    <!-- PRO TIPS: BGMI / FREE FIRE -->
+    <div class="pro-tips">
+      <span class="section-label">🔥 Battle Royale Pro Tips</span>
+      <div class="pro-tips-grid">
+
+        <div class="pro-tip-item">
+          <span class="pro-num">01</span>
+          <div>
+            <h4>Third-Party Smartly</h4>
+            <p>Let two teams fight, then engage the weakened survivors. Third-partying is a legitimate top-tier tactic — but only rush in when at least one squad is eliminated or nearly so.</p>
+          </div>
+        </div>
+
+        <div class="pro-tip-item">
+          <span class="pro-num">02</span>
+          <div>
+            <h4>Crouch While Looting</h4>
+            <p>Crouching reduces your hitbox and keeps you partially concealed while looting. Never stand still in an open room — you become an easy target through windows.</p>
+          </div>
+        </div>
+
+        <div class="pro-tip-item">
+          <span class="pro-num">03</span>
+          <div>
+            <h4>Prioritize Armor Over Guns</h4>
+            <p>A Level 3 vest with a basic rifle beats Level 1 armor with a sniper. Survivability is top priority — you cannot shoot back if you're dead in two hits.</p>
+          </div>
+        </div>
+
+        <div class="pro-tip-item">
+          <span class="pro-num">04</span>
+          <div>
+            <h4>Blue Zone Edge Strategy</h4>
+            <p>Staying near the outer edge of the safe zone lets you only worry about enemies from one direction — the inside. Master zone timing so you're never caught in the blue.</p>
+          </div>
+        </div>
+
+        <div class="pro-tip-item">
+          <span class="pro-num">05</span>
+          <div>
+            <h4>Peek &amp; ADS Efficiently</h4>
+            <p>In BGMI, use gyroscope for fine adjustments during ADS. Peek from cover, fire a burst, and return — don't expose yourself for more than a second during duels.</p>
+          </div>
+        </div>
+
+        <div class="pro-tip-item">
+          <span class="pro-num">06</span>
+          <div>
+            <h4>Carry Grenades Always</h4>
+            <p>Grenades break compound walls, flush enemies from cover, and secure knockdowns. One frag and one smoke grenade in your loadout is non-negotiable at high levels of play.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- GTA & SANDBOX TIPS -->
+    <span class="section-label">🌆 Open World &amp; Sandbox Tips</span>
+    <div class="tips-grid">
+
+      <div class="tip-card">
+        <div class="tip-icon icon-green">💰</div>
+        <span class="tip-tag tag-green">GTA V</span>
+        <h3 class="tip-title">Invest in the Stock Market</h3>
+        <p class="tip-text">In GTA V's story mode, the Lester assassination missions massively manipulate stock prices. Complete them after finishing the main story with maximum savings to earn hundreds of millions.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon icon-purple">🏗️</div>
+        <span class="tip-tag tag-purple">Minecraft</span>
+        <h3 class="tip-title">Build Down Before Up</h3>
+        <p class="tip-text">Dig your base foundation into the ground. Underground bases are protected from explosions, mobs, and other players in multiplayer. Use the first night digging, not building on the surface.</p>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon icon-gold">⚔️</div>
+        <span class="tip-tag tag-gold">Minecraft</span>
+        <h3 class="tip-title">Enchant Before the Ender Dragon</h3>
+        <p class="tip-text">Before attempting the End, have at least: Prot IV armour, Sharpness V sword, Power V bow with Infinity, and stacks of arrows. Under-gearing the End boss is the #1 new player mistake.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">GAME<span>ARENA</span></a>
+        <p>Your ultimate destination for gaming news, tips, and community. Level up your skills and dominate the competition.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" title="YouTube">▶</a>
+          <a href="#" class="social-link" title="Twitter / X">𝕏</a>
+          <a href="#" class="social-link" title="Discord">⚡</a>
+          <a href="#" class="social-link" title="Instagram">◉</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="games.html">Games</a></li>
+          <li><a href="tips.html">Tips &amp; Tricks</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Games</h4>
+        <ul class="footer-links">
+          <li><a href="games.html">BGMI</a></li>
+          <li><a href="games.html">Free Fire</a></li>
+          <li><a href="games.html">GTA V</a></li>
+          <li><a href="games.html">Minecraft</a></li>
+          <li><a href="games.html">Valorant</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Support</h4>
+        <ul class="footer-links">
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 <span>GameArena</span>. All rights reserved.</p>
+      <p>Made with ❤️ for <span>Gamers</span></p>
+    </div>
+  </footer>
+
+</body>
+</html>

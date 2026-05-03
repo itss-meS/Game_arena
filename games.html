@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games – Game Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:          #050508;
+      --bg-alt:      #0d0d1a;
+      --bg-card:     #111827;
+      --neon-green:  #00ff88;
+      --neon-blue:   #06b6d4;
+      --neon-purple: #9333ea;
+      --text:        #f1f5f9;
+      --text-muted:  #94a3b8;
+      --border:      #1e293b;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Rajdhani', sans-serif; font-size: 16px;
+      line-height: 1.6; overflow-x: hidden;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(5,5,8,.92); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0,255,136,.18);
+      padding: 0 6%; display: flex; align-items: center;
+      justify-content: space-between; height: 68px;
+    }
+    .nav-logo {
+      font-family: 'Orbitron', sans-serif; font-size: 1.45rem; font-weight: 900;
+      color: var(--neon-green); text-decoration: none;
+      text-shadow: 0 0 18px rgba(0,255,136,.55); letter-spacing: 2px;
+    }
+    .nav-logo span { color: var(--neon-blue); }
+    .nav-menu { display: flex; list-style: none; gap: 2rem; }
+    .nav-menu a {
+      font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: .95rem;
+      color: var(--text-muted); text-decoration: none; letter-spacing: 1px;
+      text-transform: uppercase; position: relative; padding-bottom: 4px;
+      transition: color .3s;
+    }
+    .nav-menu a::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 2px; background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green); transition: width .3s;
+    }
+    .nav-menu a:hover, .nav-menu a.active { color: var(--neon-green); }
+    .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 140px 6% 80px; text-align: center;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(147,51,234,.12) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(6,182,212,.1) 0%, transparent 50%),
+        var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 900;
+      background: linear-gradient(135deg, #fff 0%, #9333ea 50%, #06b6d4 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: .75rem;
+      filter: drop-shadow(0 0 22px rgba(147,51,234,.4));
+    }
+    .page-hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 560px; margin: 0 auto; }
+
+    /* FILTER BAR */
+    .filter-bar {
+      background: var(--bg-alt); border-bottom: 1px solid var(--border);
+      padding: 18px 6%; display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center;
+    }
+    .filter-btn {
+      font-family: 'Orbitron', sans-serif; font-size: .7rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 22px;
+      border-radius: 50px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); cursor: pointer;
+      transition: all .3s; text-decoration: none; display: inline-block;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(0,255,136,.1); border-color: var(--neon-green);
+      color: var(--neon-green); box-shadow: 0 0 14px rgba(0,255,136,.25);
+    }
+
+    /* GAMES GRID */
+    .games-section { padding: 80px 6%; }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 2rem;
+    }
+    .game-card {
+      background: var(--bg-card); border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform .35s, box-shadow .35s, border-color .35s;
+    }
+    .game-card:hover {
+      transform: translateY(-9px);
+      box-shadow: 0 22px 55px rgba(0,0,0,.55), 0 0 34px rgba(0,255,136,.22);
+      border-color: rgba(0,255,136,.45);
+    }
+    .game-img {
+      width: 100%; height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 900;
+      letter-spacing: 3px; position: relative; overflow: hidden;
+    }
+    .game-img .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.65) 100%);
+    }
+    .game-img-text { position: relative; z-index: 1; text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+
+    .bgmi-bg    { background: linear-gradient(135deg,#1a1a2e,#16213e,#0f3460,#533483); color:#a78bfa; }
+    .ff-bg      { background: linear-gradient(135deg,#7f1d1d,#b91c1c,#f97316,#fbbf24); color:#fef3c7; }
+    .gta-bg     { background: linear-gradient(135deg,#111827,#1f4a32,#3b7a57,#111827); color:#86efac; }
+    .mc-bg      { background: linear-gradient(135deg,#78350f,#92400e,#65a30d,#166534); color:#fef08a; }
+    .val-bg     { background: linear-gradient(135deg,#1a0000,#7f1d1d,#dc2626,#1a0000); color:#fca5a5; }
+    .cod-bg     { background: linear-gradient(135deg,#0c0c0c,#1e3a5f,#2563eb,#0c0c0c); color:#93c5fd; }
+    .fifa-bg    { background: linear-gradient(135deg,#064e3b,#065f46,#10b981,#064e3b); color:#6ee7b7; }
+    .pubg-bg    { background: linear-gradient(135deg,#292524,#44403c,#c2a04c,#292524); color:#fef08a; }
+
+    .game-info { padding: 1.4rem; }
+    .game-genre {
+      display: inline-block; font-size: .68rem; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--neon-green);
+      background: rgba(0,255,136,.1); border: 1px solid rgba(0,255,136,.2);
+      padding: 3px 10px; border-radius: 50px; margin-bottom: .75rem;
+    }
+    .game-title { font-family: 'Orbitron', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: .5rem; }
+    .game-desc  { font-size: .9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
+    .game-footer { display: flex; align-items: center; justify-content: space-between; }
+    .game-rating { display: flex; align-items: center; gap: .5rem; }
+    .stars       { color: #fbbf24; font-size: .9rem; }
+    .rating-text { font-size: .82rem; color: var(--text-muted); }
+    .game-platform { font-size: .8rem; color: var(--neon-blue); font-weight: 600; }
+
+    /* FOOTER */
+    footer {
+      background: #030305; border-top: 1px solid var(--border);
+      padding: 64px 6% 30px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-brand-logo {
+      font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900;
+      color: var(--neon-green); text-decoration: none;
+      text-shadow: 0 0 14px rgba(0,255,136,.5); letter-spacing: 2px;
+      display: block; margin-bottom: 1rem;
+    }
+    .footer-brand-logo span { color: var(--neon-blue); }
+    .footer-brand p { color: var(--text-muted); font-size: .88rem; line-height: 1.8; }
+    .footer-heading {
+      font-family: 'Orbitron', sans-serif; font-size: .8rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--text); margin-bottom: 1.4rem;
+    }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: .65rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: .88rem; transition: color .3s; }
+    .footer-links a:hover { color: var(--neon-green); }
+    .social-links { display: flex; gap: .65rem; margin-top: 1.1rem; }
+    .social-link {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); text-decoration: none; font-size: 1rem;
+      transition: all .3s;
+    }
+    .social-link:hover {
+      background: rgba(0,255,136,.1); border-color: var(--neon-green);
+      color: var(--neon-green); box-shadow: 0 0 14px rgba(0,255,136,.3);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 1.4rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-bottom p { color: var(--text-muted); font-size: .82rem; }
+    .footer-bottom span { color: var(--neon-green); }
+
+    @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 768px) { .nav-menu { display: none; } }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">GAME<span>ARENA</span></a>
+    <ul class="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="games.html" class="active">Games</a></li>
+      <li><a href="tips.html">Tips</a></li>
+      <li><a href="videos.html">Videos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <h1>Popular Games</h1>
+    <p>Browse our curated collection of the most-played titles across all genres and platforms.</p>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <a href="#" class="filter-btn active">All</a>
+    <a href="#" class="filter-btn">Battle Royale</a>
+    <a href="#" class="filter-btn">Action</a>
+    <a href="#" class="filter-btn">Sandbox</a>
+    <a href="#" class="filter-btn">Sports</a>
+    <a href="#" class="filter-btn">Shooter</a>
+  </div>
+
+  <!-- GAMES GRID -->
+  <section class="games-section">
+    <div class="games-grid">
+
+      <!-- BGMI -->
+      <div class="game-card">
+        <div class="game-img bgmi-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">BGMI</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">Battle Royale</span>
+          <h3 class="game-title">Battlegrounds Mobile India</h3>
+          <p class="game-desc">Drop into the battleground, scavenge for weapons, and be the last one standing in this intense 100-player battle royale.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-text">4.8</span>
+            </div>
+            <span class="game-platform">Mobile</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Free Fire -->
+      <div class="game-card">
+        <div class="game-img ff-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">FREE FIRE</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">Battle Royale</span>
+          <h3 class="game-title">Garena Free Fire</h3>
+          <p class="game-desc">Fast-paced survival shooter — 50 players parachute onto an island and fight for survival with unique character abilities.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★☆</span>
+              <span class="rating-text">4.5</span>
+            </div>
+            <span class="game-platform">Mobile</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GTA V -->
+      <div class="game-card">
+        <div class="game-img gta-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">GTA V</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">Open World</span>
+          <h3 class="game-title">Grand Theft Auto V</h3>
+          <p class="game-desc">Explore the sprawling open world of Los Santos in this epic crime adventure with endless missions, heists, and multiplayer chaos.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-text">4.9</span>
+            </div>
+            <span class="game-platform">PC / Console</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Minecraft -->
+      <div class="game-card">
+        <div class="game-img mc-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">MINECRAFT</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">Sandbox</span>
+          <h3 class="game-title">Minecraft</h3>
+          <p class="game-desc">Build, craft, and survive in an infinite procedurally generated world. The ultimate creative and survival experience.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-text">4.9</span>
+            </div>
+            <span class="game-platform">All Platforms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Valorant -->
+      <div class="game-card">
+        <div class="game-img val-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">VALORANT</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">Tactical Shooter</span>
+          <h3 class="game-title">Valorant</h3>
+          <p class="game-desc">Precision-based 5v5 tactical shooter combining gunplay with unique agent abilities. Strategy and aim define your rank.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-text">4.7</span>
+            </div>
+            <span class="game-platform">PC</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Call of Duty -->
+      <div class="game-card">
+        <div class="game-img cod-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">COD</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">FPS / Battle Royale</span>
+          <h3 class="game-title">Call of Duty: Warzone</h3>
+          <p class="game-desc">Drop into a massive battle royale map with up to 150 players. Gulag second chances and tactical loadout system make every match unique.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★☆</span>
+              <span class="rating-text">4.4</span>
+            </div>
+            <span class="game-platform">PC / Console</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FIFA -->
+      <div class="game-card">
+        <div class="game-img fifa-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">EA FC 25</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">Sports</span>
+          <h3 class="game-title">EA Sports FC 25</h3>
+          <p class="game-desc">The world's leading football simulation game featuring HyperMotion V technology, Ultimate Team, and authentic club licenses.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★☆</span>
+              <span class="rating-text">4.3</span>
+            </div>
+            <span class="game-platform">PC / Console</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PUBG PC -->
+      <div class="game-card">
+        <div class="game-img pubg-bg">
+          <div class="overlay"></div>
+          <span class="game-img-text">PUBG</span>
+        </div>
+        <div class="game-info">
+          <span class="game-genre">Battle Royale</span>
+          <h3 class="game-title">PUBG: Battlegrounds</h3>
+          <p class="game-desc">The original battle royale — 100 players fight across massive maps in realistic gunplay. Loot, drive, and survive to win the chicken dinner.</p>
+          <div class="game-footer">
+            <div class="game-rating">
+              <span class="stars">★★★★☆</span>
+              <span class="rating-text">4.6</span>
+            </div>
+            <span class="game-platform">PC / Console</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-brand-logo">GAME<span>ARENA</span></a>
+        <p>Your ultimate destination for gaming news, tips, and community. Level up your skills and dominate the competition.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" title="YouTube">▶</a>
+          <a href="#" class="social-link" title="Twitter / X">𝕏</a>
+          <a href="#" class="social-link" title="Discord">⚡</a>
+          <a href="#" class="social-link" title="Instagram">◉</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-heading">Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="games.html">Games</a></li>
+          <li><a href="tips.html">Tips &amp; Tricks</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Games</h4>
+        <ul class="footer-links">
+          <li><a href="games.html">BGMI</a></li>
+          <li><a href="games.html">Free Fire</a></li>
+          <li><a href="games.html">GTA V</a></li>
+          <li><a href="games.html">Minecraft</a></li>
+          <li><a href="games.html">Valorant</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Support</h4>
+        <ul class="footer-links">
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 <span>GameArena</span>. All rights reserved.</p>
+      <p>Made with ❤️ for <span>Gamers</span></p>
+    </div>
+  </footer>
+
+</body>
+</html>
